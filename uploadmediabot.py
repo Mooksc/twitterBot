@@ -1,11 +1,4 @@
-from TwitterBot import TwitterBot
-
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
-
-hal9000 = TwitterBot(consumer_key, consumer_secret, access_token, access_token_secret)
+from TwitterBot import TwitterBot, hal9000
 
 def uploadMedia(mediaFilePath, mediaCategory, tweetStatus):
     media_id = hal9000.uploadMedia(mediaFilePath, media_cat=mediaCategory).json()['media_id']

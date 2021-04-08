@@ -1,10 +1,4 @@
-from TwitterBot import TwitterBot
-
-consumer_key = ''
-consumer_secret = ''
-access_token = ''
-access_token_secret = ''
-hal9000 = TwitterBot(consumer_key, consumer_secret, access_token, access_token_secret)
+from TwitterBot import TwitterBot, hal9000
 
 def retweetBot():
     results = hal9000.searchTweets("data/results.json", '2001 A Space Odyssey', count='40', result_type='popular')

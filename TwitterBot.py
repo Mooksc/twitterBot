@@ -5,6 +5,10 @@ import os
 from requests_oauthlib import OAuth1
 import mimetypes
 
+consumer_key = ''
+consumer_secret = ''
+access_token = ''
+access_token_secret = ''
 
 class TwitterBot:
 
@@ -161,4 +165,5 @@ class TwitterBot:
                          'media_id': init.json()['media_id']
                          }
         return requests.post('https://upload.twitter.com/1.1/media/upload.json', auth=self.auth, params=finalize_data)
-        
+
+hal9000 = TwitterBot(consumer_key, consumer_secret, access_token, access_token_secret)
