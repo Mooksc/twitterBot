@@ -8,10 +8,10 @@ def likes(listOfQueries):
                 print(hal9000.like(q['ID']))
 
 def likeMentions():
-    j = hal9000.apiCall(hal9000.mentionsTimelineUrl, 'get', params={})
-    um = hal9000.makeTweetJSON('data/user_mentions.json', j.json())
-    for x in um:
-        print(hal9000.apiCall(hal9000.likeTweetUrl, 'post', params={'id': x['ID']}))
+    getTimeline = hal9000.apiCall(hal9000.mentionsTimelineUrl, 'get', params={})
+    userMentions = hal9000.makeTweetJSON('data/user_mentions.json', getTimeline.json())
+    for i in userMentions:
+        print(hal9000.apiCall(hal9000.likeTweetUrl, 'post', params={'id': i['ID']}))
 
 likes(['Hal 9000', '2001 A Space Odyssey'])
 likeMentions()
