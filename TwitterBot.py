@@ -73,14 +73,18 @@ class TwitterBot:
         print('GOT '+str(len(tweetList))+' TWEETS')
         return json.load(open(filepath))
     
-    # def searchTweets(self, resultsFilePath='results.json', searchContent, resultType='mixed', count=40):
-    #     search = self.makeTweetJSON(resultsFilePath, self.apiCall(self.searchUrl, 'get', params={'q': searchContent, 'count': str(count), 'lang': 'en', 'result_type': resultType}).json()['statuses'])
-    #     return search
+    def searchTweets(self, resultsFilePath, searchContent, **kwargs):
+        _params = {
+            'q': searchContent,
+        }
+        for i in kwargs:
+            _params[i] = kwargs[i]
+        return self.makeTweetJSON(resultsFilePath, self.apiCall(self.searchUrl, 'get', params=_params).json()['statuses'])
 
     def followBack(self):
-        json.dump(self.apiCall(self.followersUrl, 'get', params={}).json(), open('data/followers.json', 'w+', encoding='utf-8'))
+        json.dump(self.apiCall(self.followersUrl, 'get', params={}).json(), open('bots/hal9000/tests/data/followers.json', 'w+', encoding='utf-8'))
         fw = self.apiCall(self.followingUrl, 'get', params={}).json()
-        j = json.load(open('data/followers.json', 'r'))
+        j = json.load(open('bots/hal9000/tests/data/followers.json', 'r'))
         for i in j['ids']:
             if i not in fw['ids']:
                 return print(self.apiCall(self.followUserUrl, 'post', params={'user_id':i}))
@@ -99,7 +103,7 @@ class TwitterBot:
         return self.tweet(content)
     
     def retweet(self, tweetID):
-        return self.apiCall(self.retweetUrl, 'post', params={'id': tweetID})
+        return self.apiCall('https://api.twitter.com/1.1/statuses/retweet/{}.json'.format(tweetID), 'post', params={'id': tweetID})
     
     def like(self, statusIDToLike):
         return self.apiCall(self.likeTweetUrl, 'post', params={'id': statusIDToLike})
@@ -121,7 +125,7 @@ class TwitterBot:
                 ll.append(like['id'])
                 n +=1
         for i in listOfQueries:
-            query = self.makeTweetJSON('data/likes.json', self.apiCall(self.searchUrl, 'get', params={'q': i, 'count': '40', 'lang': 'en', 'result_type': 'popular'}).json()['statuses'])
+            query = self.makeTweetJSON('bots/hal9000/tests/data/likes.json', self.apiCall(self.searchUrl, 'get', params={'q': i, 'count': '40', 'lang': 'en', 'result_type': 'popular'}).json()['statuses'])
             for q in query:
                 if q['ID'] not in ll:
                     print(self.like(q['ID']))
@@ -156,4 +160,5 @@ class TwitterBot:
         finalize_data = {'command': 'FINALIZE',
                          'media_id': init.json()['media_id']
                          }
-        return requests.post('https://upload.twitter.com/1.1/media/upload.json', auth=self.auth, params=finalize_data)     
+        return requests.post('https://upload.twitter.com/1.1/media/upload.json', auth=self.auth, params=finalize_data)
+        
